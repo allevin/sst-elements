@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-20.04]
-        python-version: [2.7]
+        python-version: [2.7, 3.6, 3.8]
 #        python-version: [2.7, 3.5, 3.6, 3.7, 3.8, 3.9]
     name: Test:${{ matrix.os }}/PY-${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
@@ -35,7 +35,7 @@ jobs:
         env | sort
         echo "***"
 
-    - name: Set Env Variables
+    - name: Set Source and General Install Env Variables
       run: |
         echo "*******************************************"
         echo "*** SET SOURCE AND LOCAL DIR ENV VAR (THIS AFFECTS FUTURE STEPS)"
@@ -50,7 +50,7 @@ jobs:
         cat $GITHUB_ENV
         echo "***"
 
-    - name: Set Env Variables
+    - name: Set SST Core and Elements Install Env Variables
       run: |
         echo "*******************************************"
         echo "*** SET ENV VARS (THIS AFFECTS FUTURE STEPS)"
@@ -76,10 +76,11 @@ jobs:
         path: ./sst-elements_source
 
 #   Checkout the sstsimulator orgs sst-core/devel branch
-    - name: Checkout SSTSimulators SST-Core source
+    - name: Checkout sstsimulator SST-Core source
       uses: actions/checkout@v2
       with:
         repository: sstsimulator/sst-core
+        ref: devel
         path: ./sst-core_source
 
     - name: Check Source Directories
@@ -218,7 +219,7 @@ jobs:
     - name: Check Installation Dirs and Set PATH Env Var
       run: |
         echo "*******************************************"
-        echo "*** CHECK INSTALL DIRS AND SET PATH"
+        echo "*** CHECK INSTALL DIRS"
         echo "*******************************************"
         echo "$HOME path = " `echo $HOME`
         echo "$SST_GEN_INSTALL_PATH path = " `echo $SST_GEN_INSTALL_PATH`
@@ -297,6 +298,6 @@ jobs:
         echo "cd to $HOME"
         cd $HOME
         echo "***"
-        sst-test-elements -c
+        sst-test-elements
         echo "***"
 
