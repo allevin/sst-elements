@@ -28,9 +28,9 @@ jobs:
         echo "*******************************************"
         echo "*** SET ENV VARIABLES (AFFECTS FUTURE STEPS)"
         echo "*******************************************"
-        echo "SST_SOURCE_PATHS=$HOME/work/source" >> $GITHUB_ENV
-        echo "SST_CORE_SOURCE_PATH=$HOME/work/source/sstscore" >> $GITHUB_ENV
-        echo "SST_ELEMENTS_SOURCE_PATH=$HOME/work/source/sst-elements" >> $GITHUB_ENV
+        echo "SST_SOURCE_PATHS=$HOME/work/sst-elements/sst-elements" >> $GITHUB_ENV
+        echo "SST_CORE_SOURCE_PATH=$HOME/work/sst-elements/sst-elements/ssts-core_source" >> $GITHUB_ENV
+        echo "SST_ELEMENTS_SOURCE_PATH=$HOME/work/sst-elements/sst-elements/sst-elements_source" >> $GITHUB_ENV
         echo "SST_CORE_HOME=$HOME/local/sstcore_install" >> $GITHUB_ENV
         echo "SST_ELEMENTS_HOME=$HOME/local/sstelements_install" >> $GITHUB_ENV
         echo "SST_CORE_BIN=$HOME/local/sstcore_install/bin" >> $GITHUB_ENV
@@ -46,13 +46,13 @@ jobs:
     - name: Checkout SST-Elements source
       uses: actions/checkout@v2
       with:
-        path: ../../../sst-elements_source
+        path: ./sst-elements_source
 
     - name: Checkout SST-Core source
       uses: actions/checkout@v2
       with:
         repository: sstsimulator/sst-core
-        path: ../../../sst-core_source
+        path: ./sst-core_source
 
 #    - name: Set up Python ${{ matrix.python-version }}
 #      uses: actions/setup-python@v2
@@ -89,15 +89,21 @@ jobs:
         echo "ls $HOME/work/sst-elements "
         ls -lia $HOME/work/sst-elements
         echo "***"
-#        echo "ls SST_SOURCE_PATHS "
-#        ls -lia $SST_SOURCE_PATHS
-#        echo "***"
-#        echo "ls SST_ELEMENTS_SOURCE_PATH "
-#        ls -lia $SST_ELEMENTS_SOURCE_PATH
-#        echo "***"
-#        echo "ls SST_CORE_SOURCE_PATH "
-#        ls -lia $SST_CORE_SOURCE_PATH
-#        echo "***"
+        echo "ls $HOME/work/sst-elements/sst-elements "
+        ls -lia $HOME/work/sst-elements/sst-elements
+        echo "***"
+        echo "SST_SOURCE_PATHS = " `echo $SST_SOURCE_PATHS`
+        echo "ls SST_SOURCE_PATHS "
+        ls -lia $SST_SOURCE_PATHS
+        echo "***"
+        echo "SST_ELEMENTS_SOURCE_PATH = " `echo $SST_ELEMENTS_SOURCE_PATH`
+        echo "ls SST_ELEMENTS_SOURCE_PATH "
+        ls -lia $SST_ELEMENTS_SOURCE_PATH
+        echo "***"
+        echo "SST_CORE_SOURCE_PATH = " `echo $SST_CORE_SOURCE_PATH`
+        echo "ls SST_CORE_SOURCE_PATH "
+        ls -lia $SST_CORE_SOURCE_PATH
+        echo "***"
 
 
 
