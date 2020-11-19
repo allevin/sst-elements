@@ -23,13 +23,25 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+    - name: System Information Dump - Startup
+      run: |
+        echo "*******************************************"
+        echo "*** SYSTEM INFO DUMP AT STARTUP"
+        echo "*******************************************"
+        echo
+        echo "pwd = " `pwd`
+        echo "***"
+        echo "env | sort = "
+        env | sort
+        echo "***"
+
     - name: Set Env Variables
       run: |
         echo "*******************************************"
-        echo "*** SET ENV VARIABLES (AFFECTS FUTURE STEPS)"
+        echo "*** SET ENV VARIABLES (THIS AFFECTS FUTURE STEPS)"
         echo "*******************************************"
         echo "SST_SOURCE_PATHS=$HOME/work/sst-elements/sst-elements" >> $GITHUB_ENV
-        echo "SST_CORE_SOURCE_PATH=$HOME/work/sst-elements/sst-elements/ssts-core_source" >> $GITHUB_ENV
+        echo "SST_CORE_SOURCE_PATH=$HOME/work/sst-elements/sst-elements/sst-core_source" >> $GITHUB_ENV
         echo "SST_ELEMENTS_SOURCE_PATH=$HOME/work/sst-elements/sst-elements/sst-elements_source" >> $GITHUB_ENV
         echo "SST_CORE_HOME=$HOME/local/sstcore_install" >> $GITHUB_ENV
         echo "SST_ELEMENTS_HOME=$HOME/local/sstelements_install" >> $GITHUB_ENV
@@ -43,35 +55,18 @@ jobs:
         cat $GITHUB_ENV
         echo "***"
 
-    - name: Checkout SST-Elements source
+    - name: Checkout Users SST-Elements source
       uses: actions/checkout@v2
       with:
         path: ./sst-elements_source
 
-    - name: Checkout SST-Core source
+    - name: Checkout SSTSimulators SST-Core source
       uses: actions/checkout@v2
       with:
         repository: sstsimulator/sst-core
         path: ./sst-core_source
 
-#    - name: Set up Python ${{ matrix.python-version }}
-#      uses: actions/setup-python@v2
-#      with:
-#        python-version: ${{ matrix.python-version }}
-
-    - name: System Information Dump - Startup
-      run: |
-        echo "*******************************************"
-        echo "*** SYSTEM INFO DUMP AT STARTUP"
-        echo "*******************************************"
-        echo
-        echo "pwd = " `pwd`
-        echo "***"
-        echo "env | sort = "
-        env | sort
-        echo "***"
-
-    - name: DEBUG - Check SOURCE DIRS
+    - name: Check Source Directories
       run: |
         echo "*******************************************"
         echo "*** CHECK INSTALL DIRS AND SET PATH"
@@ -82,15 +77,6 @@ jobs:
         echo "***"
         echo "ls HOME "
         ls -lia $HOME
-        echo "***"
-        echo "ls $HOME/work "
-        ls -lia $HOME/work
-        echo "***"
-        echo "ls $HOME/work/sst-elements "
-        ls -lia $HOME/work/sst-elements
-        echo "***"
-        echo "ls $HOME/work/sst-elements/sst-elements "
-        ls -lia $HOME/work/sst-elements/sst-elements
         echo "***"
         echo "SST_SOURCE_PATHS = " `echo $SST_SOURCE_PATHS`
         echo "ls SST_SOURCE_PATHS "
@@ -105,70 +91,76 @@ jobs:
         ls -lia $SST_CORE_SOURCE_PATH
         echo "***"
 
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
 
+    - name: Install TestTools Module
+      run: |
+        echo "*******************************************"
+        echo "*** INSTALL TESTTOOLS"
+        echo "*******************************************"
+        pip install testtools
+        echo "***"
 
+    - name: Install OpenMPI
+      run: |
+        echo "*******************************************"
+        echo "*** INSTALL OPENMPI"
+        echo "*******************************************"
+        sudo apt-get install -y openmpi-bin
+        echo "***"
+        echo "Trying mpirun = " `which mpirun`
+        echo "mpirun version = " `mpirun --version`
+        echo "***"
 
-#    - name: Install TestTools Module
-#      run: |
-#        echo "*******************************************"
-#        echo "*** INSTALL TESTTOOLS"
-#        echo "*******************************************"
-#        pip install testtools
-#        echo "***"
-#
-#    - name: Install OpenMPI
-#      run: |
-#        echo "*******************************************"
-#        echo "*** INSTALL OPENMPI"
-#        echo "*******************************************"
-#        sudo apt-get install -y openmpi-bin
-#        echo "***"
-#        echo "Trying mpirun = " `which mpirun`
-#        echo "mpirun version = " `mpirun --version`
-#        echo "***"
-#
-#    - name: Setup Autotools
-#      run: |
-#        echo "*******************************************"
-#        echo "*** INSTALL AUTOTOOLS"
-#        echo "*******************************************"
-#        echo "Trying to install libtool"
-#        sudo apt-get install -y libtool-bin
-#        echo "***"
-#        echo "LIBTOOLIZE path = " `echo $LIBTOOLIZE`
-#        echo "LIBTOOL path = " `echo $LIBTOOL`
-#        echo "LIBTOOLIZE version = " `libtoolize --version`
-#        echo "LIBTOOL    version = " `libtool --version`
-#        echo "***"
-#
-#    - name: System Information Dump - Before Build
-#      run: |
-#        echo "*******************************************"
-#        echo "*** SYSTEM INFO DUMP BEFORE BUILD"
-#        echo "*******************************************"
-#        echo
-#        echo "pwd = " `pwd`
-#        echo "***"
-#        echo "env | sort = "
-#        env | sort
-#        echo "***"
-#
-#    - name: Perform Autogen on SST-Core
-#      run: |
-#        echo "*******************************************"
-#        echo "*** RUNNING AUTOGEN ON SST-Core"
-#        echo "*******************************************"
-#        ./autogen.sh
-#        echo "***"
-#
-#    - name: Perform Configure on SST-Core
-#      run: |
-#        echo "*******************************************"
-#        echo "*** RUNNING CONFIGURE ON SST-Core"
-#        echo "*******************************************"
-#        ./configure --prefix=$SST_CORE_HOME
-#        echo "***"
-#
+    - name: Setup Autotools
+      run: |
+        echo "*******************************************"
+        echo "*** INSTALL AUTOTOOLS"
+        echo "*******************************************"
+        echo "Trying to install libtool"
+        sudo apt-get install -y libtool-bin
+        echo "***"
+        echo "LIBTOOLIZE path = " `echo $LIBTOOLIZE`
+        echo "LIBTOOL path = " `echo $LIBTOOL`
+        echo "LIBTOOLIZE version = " `libtoolize --version`
+        echo "LIBTOOL    version = " `libtool --version`
+        echo "***"
+
+    - name: System Information Dump - Before Build
+      run: |
+        echo "*******************************************"
+        echo "*** SYSTEM INFO DUMP BEFORE BUILD"
+        echo "*******************************************"
+        echo
+        echo "pwd = " `pwd`
+        echo "***"
+        echo "env | sort = "
+        env | sort
+        echo "***"
+
+    - name: Perform Autogen on SST-Core
+      run: |
+        echo "*******************************************"
+        echo "*** RUNNING AUTOGEN ON SST-Core"
+        echo "*******************************************"
+        echo "Change Directory to SST CORE"
+        cd $SST_CORE_SOURCE_PATH
+        echo "pwd = " `pwd`
+        echo "***"
+        ./autogen.sh
+        echo "***"
+
+    - name: Perform Configure on SST-Core
+      run: |
+        echo "*******************************************"
+        echo "*** RUNNING CONFIGURE ON SST-Core"
+        echo "*******************************************"
+        ./configure --prefix=$SST_CORE_HOME
+        echo "***"
+
 #    - name: Perform Make on SST-Core
 #      run: |
 #        echo "*******************************************"
