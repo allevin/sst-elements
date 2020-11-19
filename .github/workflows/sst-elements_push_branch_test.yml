@@ -46,7 +46,6 @@ jobs:
     - name: Checkout SST-Elements source
       uses: actions/checkout@v2
       with:
-        repository: my-org/my-tools
         path: $SST_ELEMENTS_SOURCE_PATH
 
     - name: Checkout SST-Core source
@@ -72,8 +71,6 @@ jobs:
         env | sort
         echo "***"
 
-
-
     - name: DEBUG - Check SOURCE DIRS
       run: |
         echo "*******************************************"
@@ -83,11 +80,16 @@ jobs:
         echo "$SST_CORE_HOME path = " `echo $SST_CORE_HOME`
         echo "$SST_CORE_BIN path = " `echo $SST_CORE_BIN`
         echo "***"
-        echo "ls $HOME "
+        echo "ls HOME "
         ls -lia $HOME
+        echo "ls SST_SOURCE_PATHS "
+        ls -lia $SST_SOURCE_PATHS
         echo "***"
-        echo "ls $HOME "
-        ls -lia $HOME
+        echo "ls SST_ELEMENTS_SOURCE_PATH "
+        ls -lia $SST_ELEMENTS_SOURCE_PATH
+        echo "***"
+        echo "ls SST_CORE_SOURCE_PATH "
+        ls -lia $SST_CORE_SOURCE_PATH
         echo "***"
 
 
