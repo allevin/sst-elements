@@ -141,7 +141,7 @@ jobs:
         env | sort
         echo "***"
 
-    - name: Perform Autogen on SST-Core
+    - name: Build and Install SST-Core
       run: |
         echo "*******************************************"
         echo "*** RUNNING AUTOGEN ON SST-Core"
@@ -152,86 +152,99 @@ jobs:
         echo "***"
         ./autogen.sh
         echo "***"
-
-    - name: Perform Configure on SST-Core
-      run: |
         echo "*******************************************"
         echo "*** RUNNING CONFIGURE ON SST-Core"
         echo "*******************************************"
         ./configure --prefix=$SST_CORE_HOME
         echo "***"
+        echo "*******************************************"
+        echo "*** RUNNING MAKE ON SST-Core"
+        echo "*******************************************"
+        make -j16
+        echo "***"
+        echo "*******************************************"
+        echo "*** RUNNING MAKE INSTALL ON SST-Core"
+        echo "*******************************************"
+        make install
+        echo "***"
 
-#    - name: Perform Make on SST-Core
+    - name: Check Installation Dirs and Set PATH Env Var
+      run: |
+        echo "*******************************************"
+        echo "*** CHECK INSTALL DIRS AND SET PATH"
+        echo "*******************************************"
+        echo "$HOME path = " `echo $HOME`
+        echo "$SST_CORE_HOME path = " `echo $SST_CORE_HOME`
+        echo "$SST_CORE_BIN path = " `echo $SST_CORE_BIN`
+        echo "***"
+        echo "ls $HOME "
+        ls -lia $HOME
+        echo "***"
+        echo "ls $HOME/local "
+        ls -lia $HOME/local
+        echo "***"
+        echo "ls $SST_CORE_HOME"
+        ls -lia $SST_CORE_HOME
+        echo "***"
+        echo "ls $SST_CORE_BIN"
+        ls -lia $SST_CORE_BIN
+        echo "***"
+        echo "ls $SST_ELEMENTS_HOME"
+        ls -lia $SST_ELEMENTS_HOME
+        echo "***"
+        echo "ls $SST_ELEMENTS_BIN"
+        ls -lia $SST_ELEMENTS_BIN
+        echo "***"
+        echo "SET THE PATH TO SST BIN DIR (ONLY AVAILABLE IN FUTURE STEPS)"
+        echo $SST_CORE_BIN >> $GITHUB_PATH
+        echo "***"
+        echo "LOCATION OF GITHUB_PATH SCRIPT"
+        echo $GITHUB_PATH
+        echo "***"
+        echo "CONTENTS OF GITHUB_PATH"
+        cat $GITHUB_PATH
+        echo "***"
+
+    - name: Quick Check of SST-Core Operation
+      run: |
+        echo "*******************************************"
+        echo "*** QUICK CHECK OF SST-CORE OPERATION"
+        echo "*******************************************"
+        echo "cd to $HOME"
+        cd $HOME
+        echo "***"
+        echo "RUNNING SST FROM HOME DIR"
+        echo "sst version = " `$SST_CORE_BIN/sst --version`
+        echo "***"
+        echo "RUNNING SST --VERSION USING THE PATH"
+        sst --version
+        echo "***"
+
+    - name: Perform Frameworks Testing on SST-Core
+      run: |
+        echo "*******************************************"
+        echo "*** FRAMEWORKS TESTING - SST-CORE"
+        echo "*******************************************"
+        echo "cd to $HOME"
+        cd $HOME
+        echo "***"
+        sst-test-core
+        echo "***"
+        echo "ls $HOME "
+        ls -lia $HOME
+        echo "***"
+
+#    - name: Perform Frameworks Testing on SST-Elements
 #      run: |
 #        echo "*******************************************"
-#        echo "*** RUNNING MAKE ON SST-Core"
-#        echo "*******************************************"
-#        make -j16
-#        echo "***"
-#
-#    - name: Perform Make Install on SST-Core
-#      run: |
-#        echo "*******************************************"
-#        echo "*** RUNNING MAKE INSTALL ON SST-Core"
-#        echo "*******************************************"
-#        make install
-#
-#    - name: Check Installation Dirs and Set PATH Env Var
-#      run: |
-#        echo "*******************************************"
-#        echo "*** CHECK INSTALL DIRS AND SET PATH"
-#        echo "*******************************************"
-#        echo "$HOME path = " `echo $HOME`
-#        echo "$SST_CORE_HOME path = " `echo $SST_CORE_HOME`
-#        echo "$SST_CORE_BIN path = " `echo $SST_CORE_BIN`
-#        echo "***"
-#        echo "ls $HOME "
-#        ls -lia $HOME
-#        echo "***"
-#        echo "ls $HOME/local "
-#        ls -lia $HOME/local
-#        echo "***"
-#        echo "ls $SST_CORE_HOME"
-#        ls -lia $SST_CORE_HOME
-#        echo "***"
-#        echo "ls $SST_CORE_BIN"
-#        ls -lia $SST_CORE_BIN
-#        echo "***"
-#        echo "SET THE PATH TO SST BIN DIR (ONLY AVAILABLE IN FUTURE STEPS)"
-#        echo $SST_CORE_BIN >> $GITHUB_PATH
-#        echo "***"
-#        echo "LOCATION OF GITHUB_PATH SCRIPT"
-#        echo $GITHUB_PATH
-#        echo "***"
-#        echo "CONTENTS OF GITHUB_PATH"
-#        cat $GITHUB_PATH
-#        echo "***"
-#
-#    - name: Quick Check of SST-Core Operation
-#      run: |
-#        echo "*******************************************"
-#        echo "*** QUICK CHECK OF SST-CORE OPERATION"
+#        echo "*** FRAMEWORKS TESTING - SST-ELEMENTS"
 #        echo "*******************************************"
 #        echo "cd to $HOME"
 #        cd $HOME
 #        echo "***"
-#        echo "RUNNING SST FROM HOME DIR"
-#        echo "sst version = " `$SST_CORE_BIN/sst --version`
-#        echo "***"
-#        echo "RUNNING SST --VERSION USING THE PATH"
-#        sst --version
-#        echo "***"
-#
-#    - name: Perform Testing on SST-Core
-#      run: |
-#        echo "*******************************************"
-#        echo "*** Testing SST-Core"
-#        echo "*******************************************"
-#        echo "cd to $HOME"
-#        cd $HOME
-#        echo "***"
-#        $SST_CORE_BIN/sst-test-core
+#        sst-test-elements
 #        echo "***"
 #        echo "ls $HOME "
 #        ls -lia $HOME
-#
+#        echo "***"
+
