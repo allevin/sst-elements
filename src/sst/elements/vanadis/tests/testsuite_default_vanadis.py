@@ -22,10 +22,10 @@ def build_vanadis_test_matrix():
 
     # Add the SDL file, test dir compiled elf file, and test run timeout to create the testlist
     testlist.append(["basic_vanadis.py", "small/basic-io", "hello-world", 20])
-    testlist.append(["basic_vanadis.py", "small/basic-math", "sqrt-double", 300])
-    testlist.append(["basic_vanadis.py", "small/basic-math", "sqrt-float", 240])
-    testlist.append(["basic_vanadis.py", "small/basic-ops", "test-branch", 60])
-    testlist.append(["basic_vanadis.py", "small/basic-ops", "test-shift", 120])
+    testlist.append(["basic_vanadis.py", "small/basic-math", "sqrt-double", 600])
+    testlist.append(["basic_vanadis.py", "small/basic-math", "sqrt-float", 480])
+    testlist.append(["basic_vanadis.py", "small/basic-ops", "test-branch", 120])
+    testlist.append(["basic_vanadis.py", "small/basic-ops", "test-shift", 240])
 
     # Process each line and crack up into an index, hash, options and sdl file
     for testnum, test_info in enumerate(testlist):
